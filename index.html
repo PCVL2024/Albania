@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa da Albânia</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+#map {
+    height: 80vh;
+    width: 100%;
+    margin: 0 auto;
+}
+
+    </style>
+    <h1>Mapa Político da Albânia</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Inicializa o mapa
+var map = L.map('map').setView([41.1533, 20.1683], 8); // Coordenadas centrais da Albânia
+
+// Adiciona a camada de mapa base
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Lista das principais cidades da Albânia com suas coordenadas e informações adicionais
+var cities = [
+    { 
+        name: "Tirana", 
+        coords: [41.3275, 19.8187],
+        description: "Tirana é a capital e maior cidade da Albânia.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Tirana"
+    },
+    { 
+        name: "Durrës", 
+        coords: [41.3231, 19.4417],
+        description: "Durrës é uma cidade portuária na costa do Mar Adriático, uma das mais antigas do país.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Durr%C3%ABs"
+    },
+    { 
+        name: "Vlorë", 
+        coords: [40.4661, 19.4914],
+        description: "Vlorë é uma cidade costeira e o segundo maior porto da Albânia.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Vlor%C3%AB"
+    },
+    { 
+        name: "Shkodër", 
+        coords: [42.0683, 19.5126],
+        description: "Shkodër é uma das mais antigas e históricas cidades da Albânia, localizada próxima ao Lago Skadar.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Shkod%C3%ABr"
+    },
+    { 
+        name: "Fier", 
+        coords: [40.7239, 19.5561],
+        description: "Fier é uma cidade industrial e agrícola na região sudoeste da Albânia.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Fier"
+    },
+    { 
+        name: "Elbasan", 
+        coords: [41.1125, 20.0822],
+        description: "Elbasan é uma cidade conhecida por suas indústrias e patrimônio histórico.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Elbasan"
+    },
+    { 
+        name: "Korçë", 
+        coords: [40.6186, 20.7808],
+        description: "Korçë é uma cidade multicultural conhecida por sua arquitetura e tradições.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Kor%C3%A7%C3%AB"
+    },
+    { 
+        name: "Berat", 
+        coords: [40.7058, 19.9520],
+        description: "Berat é conhecida como a cidade das mil janelas, famosa por sua arquitetura otomana.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Berat"
+    },
+    { 
+        name: "Lushnjë", 
+        coords: [40.9419, 19.7050],
+        description: "Lushnjë é uma cidade agrícola localizada no coração da Albânia.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Lushnj%C3%AB"
+    },
+    { 
+        name: "Kavajë", 
+        coords: [41.1878, 19.5561],
+        description: "Kavajë é uma cidade costeira com uma longa história cultural e histórica.",
+        moreInfo: "https://pt.wikipedia.org/wiki/Kavaj%C3%AB"
+    }
+];
+
+// Adiciona marcadores para as cidades
+cities.forEach(function(city) {
+    var marker = L.marker(city.coords).addTo(map);
+    
+    // Cria um popup interativo para cada cidade
+    marker.bindPopup(`
+        <b>${city.name}</b><br>
+        ${city.description}<br>
+        <a href="${city.moreInfo}" target="_blank">Mais Informações</a>
+    `);
+});
+
+    </script>
+</body>
+</html>
+
+

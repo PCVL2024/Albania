@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa da Albânia</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <style>
+    #map {
+    height: 100vh;
+    width: 100%;
+}
+
+/* Definir cores de hover */
+.hover-color-1 {
+    fill: #A94461;
+    fill-opacity: 0.5;
+}
+
+.hover-color-2 {
+    fill: #5044A9;
+    fill-opacity: 0.5;
+}
+
+.hover-color-3 {
+    fill: #A98C44;
+    fill-opacity: 0.5;
+}
+
+  </style>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+      // Inicializa o mapa
+const map = L.map('map').setView([41.3275, 19.8187], 7); // Coordenadas centrais da Albânia
+
+// Adiciona a camada de azulejos do mapa
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// URL do GeoJSON
+const geoJsonUrl = 'https://raw.githubusercontent.com/highcharts/map-collection-dist/master/countries/al/al-all.topo.json';
+
+// Função para converter TopoJSON para GeoJSON
+function topoToGeo(json) {
+    return topojson.feature(json, json.objects.default); // Supondo que 'default' seja a key correta
+}
+
+// Função para aplicar estilo ao hover
+function highlightFeature(e) {
+    const layer = e.target;
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7,
+        fillColor: layer.options.originalColor
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+}
+
+// Função para resetar o estilo ao sair do hover
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
+
+// Função para adicionar interatividade
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: function (e) {
+            map.fitBounds(e.target.getBounds());
+        }
+    });
+    layer.bindTooltip(`Província: ${feature.properties.name}`, {
+        permanent: false,
+        direction: "top"
+    });
+}
+
+// Carrega o GeoJSON e adiciona ao mapa
+fetch(geoJsonUrl)
+    .then(response => response.json())
+    .then(data => {
+        const geoJson = topoToGeo(data);
+
+        // Atribui uma cor original a cada província
+        geoJson.features.forEach((feature, index) => {
+            const colors = ['#A94461', '#5044A9', '#A98C44'];
+            feature.properties.originalColor = colors[index % colors.length];
+        });
+
+        geojson = L.geoJSON(geoJson, {
+            style: function (feature) {
+                return {
+                    color: feature.properties.originalColor,
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.5
+                };
+            },
+            onEachFeature: onEachFeature
+        }).addTo(map);
+    })
+    .catch(error => console.error('Erro ao carregar o GeoJSON:', error));
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
